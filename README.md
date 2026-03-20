@@ -1,1 +1,1 @@
-# Use Case 3: Centralized Room Inventory Management
+## 🧩 Use Case 6: Reservation Confirmation & Room Allocation
