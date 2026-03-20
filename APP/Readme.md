@@ -1,96 +1,81 @@
-## 🧩 Use Case 4: Room Search & Availability Check
+## 🧩 Use Case 6: Reservation Confirmation & Room Allocation
 
 ### 🎯 Goal
 
-Enable guests to view available rooms and their details **without modifying system state**, reinforcing safe data access and clear separation of responsibilities.
+Confirm booking requests by assigning rooms safely while ensuring inventory consistency and preventing double-booking under all circumstances.
 
 ---
 
 ### 👥 Actors
 
-* **Guest** – Initiates a search to view available room options
-* **Search Service** – Handles read-only access to inventory and room information
+* **Booking Service** – Processes queued booking requests and performs room allocation
+* **Inventory Service** – Maintains and updates room availability state
 
 ---
 
 ### 🔄 Flow
 
-1. Guest initiates a room search request
-2. The system retrieves availability data from the centralized inventory
-3. Room details and pricing are obtained from Room objects
-4. Unavailable room types are filtered out
-5. Available room types and their details are displayed
-6. System state remains unchanged
+1. Booking request is dequeued from the request queue (FIFO)
+2. The system checks availability for the requested room type
+3. A unique room ID is generated and assigned
+4. The room ID is recorded to prevent reuse
+5. Inventory count is decremented immediately
+6. Reservation is confirmed
 
 ---
 
 ### 🧠 Key Concepts Used
 
-* **Read-Only Access**
-  Search operations only retrieve data without modifying it, ensuring system stability.
+* **Problem of Double Booking**
+  Without controlled allocation, the same room may be assigned multiple times, leading to inconsistent system state.
 
-* **Defensive Programming**
-  Only room types with valid availability are displayed, preventing incorrect or misleading output.
+* **Set Data Structure**
+  A `Set<String>` is used to store allocated room IDs and ensure uniqueness.
 
-* **Separation of Concerns**
-  Search logic is independent of booking and inventory update logic.
+* **Uniqueness Enforcement**
+  Duplicate room IDs are prevented automatically using a set.
 
-* **Inventory as State Holder**
-  Inventory acts as a centralized data source for availability.
+* **Mapping Room Types to Assigned Rooms**
+  A `HashMap<String, Set<String>>` tracks allocated rooms per room type.
 
-* **Domain Model Usage**
-  Room objects encapsulate details like pricing, size, and beds.
+* **Atomic Logical Operations**
+  Room assignment and inventory update are performed together to maintain consistency.
 
-* **Validation Logic**
-  Rooms with zero availability are excluded from results.
+* **Inventory Synchronization**
+  Availability is updated immediately after allocation to reflect real-time state.
 
 ---
 
 ### 📌 Key Requirements
 
-* Retrieve room availability from centralized inventory
-* Display only room types with availability > 0
-* Show room details using Room domain objects
-* Ensure inventory is not modified during search
-* Maintain separation between search and booking logic
+* Process booking requests in FIFO order
+* Generate a unique room ID for each booking
+* Prevent duplicate room assignments
+* Update inventory immediately after allocation
+* Maintain consistent system state
 
 ---
 
 ### ✅ Key Benefits
 
-* Accurate availability visibility without modifying system state
-* Prevents accidental inventory corruption
-* Clean separation between read-only and write operations
+* Guarantees unique room assignments
+* Prevents double-booking scenarios
+* Keeps inventory and booking data synchronized
 
 ---
 
 ### ⚠️ Drawbacks of Previous Use Case
 
-* Use Case 3 introduced centralized inventory but did not separate read and write operations
-* Risk of unintended inventory modification during non-booking actions
+* Use Case 5 handled request ordering but did not confirm bookings
+* No mechanism existed to prevent duplicate or conflicting room assignments
 
 ---
 
 ### 🖥️ Sample Output
 
-```
-Room Search
-
-Single Room:
-Beds: 1
-Size: 250 sqft
-Price per night: 1500.0
-Available: 5
-
-Double Room:
-Beds: 2
-Size: 400 sqft
-Price per night: 2500.0
-Available: 3
-
-Suite Room:
-Beds: 3
-Size: 750 sqft
-Price per night: 5000.0
-Available: 2
+```text id="u7v4r9"
+Room Allocation Processing
+Booking confirmed for Guest: Abhi, Room ID: Single Room-1
+Booking confirmed for Guest: Subha, Room ID: Single Room-2
+Booking confirmed for Guest: Vanmathi, Room ID: Suite Room-1
 ```
