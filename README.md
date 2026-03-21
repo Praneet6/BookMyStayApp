@@ -4,4 +4,4 @@
 - Fair request handling using FIFO principles
 - Real-time inventory consistency across booking operations
 - Prevention of double-booking through uniqueness enforcement
-- Extensible and maintainable system design suitable for real applications
+- Extensible and maintainable system design suitable for real applications, scenarios.
