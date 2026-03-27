@@ -1,81 +1,140 @@
-## 🧩 Use Case 6: Reservation Confirmation & Room Allocation
+# 📌 Use Case 7: Add-On Service Selection
 
-### 🎯 Goal
+## 📖 Overview
 
-Confirm booking requests by assigning rooms safely while ensuring inventory consistency and preventing double-booking under all circumstances.
-
----
-
-### 👥 Actors
-
-* **Booking Service** – Processes queued booking requests and performs room allocation
-* **Inventory Service** – Maintains and updates room availability state
+This module extends the **Book My Stay App** by introducing optional add-on services that can be attached to an existing reservation. It demonstrates how real-world features like breakfast, spa, and airport pickup can be integrated without modifying core booking or inventory logic.
 
 ---
 
-### 🔄 Flow
+## 🎯 Goal
 
-1. Booking request is dequeued from the request queue (FIFO)
-2. The system checks availability for the requested room type
-3. A unique room ID is generated and assigned
-4. The room ID is recorded to prevent reuse
-5. Inventory count is decremented immediately
-6. Reservation is confirmed
+To enable guests to select additional services for a confirmed reservation while maintaining separation from core booking functionality.
 
 ---
 
-### 🧠 Key Concepts Used
+## 👤 Actors
 
-* **Problem of Double Booking**
-  Without controlled allocation, the same room may be assigned multiple times, leading to inconsistent system state.
-
-* **Set Data Structure**
-  A `Set<String>` is used to store allocated room IDs and ensure uniqueness.
-
-* **Uniqueness Enforcement**
-  Duplicate room IDs are prevented automatically using a set.
-
-* **Mapping Room Types to Assigned Rooms**
-  A `HashMap<String, Set<String>>` tracks allocated rooms per room type.
-
-* **Atomic Logical Operations**
-  Room assignment and inventory update are performed together to maintain consistency.
-
-* **Inventory Synchronization**
-  Availability is updated immediately after allocation to reflect real-time state.
+* **Guest** – selects optional services for a reservation
+* **Add-On Service** – represents individual services (e.g., Breakfast, Spa)
+* **Add-On Service Manager** – manages services linked to reservations
 
 ---
 
-### 📌 Key Requirements
+## 🔄 Flow of Execution
 
-* Process booking requests in FIFO order
-* Generate a unique room ID for each booking
-* Prevent duplicate room assignments
-* Update inventory immediately after allocation
-* Maintain consistent system state
-
----
-
-### ✅ Key Benefits
-
-* Guarantees unique room assignments
-* Prevents double-booking scenarios
-* Keeps inventory and booking data synchronized
+1. Guest enters a **Reservation ID**
+2. Guest selects one or more add-on services
+3. Selected services are stored in a list
+4. Services are mapped to the reservation ID
+5. Total cost of services is calculated
+6. Booking and inventory remain unchanged
 
 ---
 
-### ⚠️ Drawbacks of Previous Use Case
+## 🧠 Key Concepts Used
 
-* Use Case 5 handled request ordering but did not confirm bookings
-* No mechanism existed to prevent duplicate or conflicting room assignments
+### ✔ One-to-Many Relationship
 
----
+A single reservation can have multiple services:
 
-### 🖥️ Sample Output
-
-```text id="u7v4r9"
-Room Allocation Processing
-Booking confirmed for Guest: Abhi, Room ID: Single Room-1
-Booking confirmed for Guest: Subha, Room ID: Single Room-2
-Booking confirmed for Guest: Vanmathi, Room ID: Suite Room-1
 ```
+Reservation ID → [Service1, Service2, Service3]
+```
+
+### ✔ Map + List Combination
+
+* `Map<String, List<Service>>`
+* Efficient lookup + multiple service support
+
+### ✔ Composition over Inheritance
+
+* Services are **attached** to reservations
+* No modification of existing booking classes
+
+### ✔ Separation of Concerns
+
+* Booking system remains untouched
+* Add-on logic handled independently
+
+### ✔ Cost Aggregation
+
+* Total service cost calculated dynamically
+
+---
+
+## 🛠️ Implementation Details
+
+### 🔹 Classes Used
+
+* `Service` → Represents an add-on service
+* `AddOnServiceManager` → Handles service mapping and cost calculation
+* `UseCase7AddOnServiceSelection` → Main driver class
+
+---
+
+## 📦 Data Structure Used
+
+| Data Structure | Purpose                        |
+| -------------- | ------------------------------ |
+| HashMap        | Map reservation ID to services |
+| ArrayList      | Store multiple services        |
+
+---
+
+## ▶️ How to Run
+
+```bash
+javac UseCase7AddOnServiceSelection.java
+java UseCase7AddOnServiceSelection
+```
+
+---
+
+## 💻 Sample Output
+
+```
+===== Add-On Service Selection =====
+Enter Reservation ID: Single-1
+
+1. Add Breakfast (₹500)
+2. Add Spa (₹1000)
+3. Add Airport Pickup (₹800)
+
+Breakfast added to Single-1
+Spa added to Single-1
+
+Total Add-On Cost: 1500.0
+```
+
+---
+
+## ✅ Key Benefits
+
+* Flexible service attachment
+* Clean extension of booking system
+* No impact on inventory or allocation logic
+* Easy to add new services
+
+---
+
+## ⚠️ Limitations of Previous Use Case
+
+Use Case 6 confirmed reservations but did not support additional services.
+This use case adds real-world flexibility to enhance booking value.
+
+---
+
+## 🚀 Future Enhancements
+
+* Service removal option
+* Discount/coupon system
+* Service categories (premium/basic)
+* Billing integration
+
+---
+
+## 👨‍💻 Author
+
+**Praneet**
+
+---
