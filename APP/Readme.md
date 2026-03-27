@@ -1,114 +1,89 @@
-# 📌 Use Case 9: Error Handling & Validation
+# 📌 Use Case 11: Concurrent Booking Simulation
 
 ## 📖 Overview
 
-This module introduces structured validation and error handling into the Book My Stay App. It ensures that invalid inputs are detected early and handled gracefully using custom exceptions.
+This module demonstrates how multiple users can book rooms simultaneously and how synchronization ensures correctness.
 
 ---
 
 ## 🎯 Goal
 
-To prevent invalid bookings by validating user input and maintaining system consistency.
+To prevent race conditions and ensure thread-safe booking operations.
 
 ---
 
 ## 👤 Actors
 
-* **Guest** – provides booking input
-* **Reservation Validator** – validates inputs
-* **System** – handles errors safely
+* Multiple Guests (threads)
+* Booking Processor
+* Shared Inventory
 
 ---
 
 ## 🔄 Flow
 
-1. User enters booking details
-2. System validates input
-3. If invalid → exception thrown
-4. Error message displayed
-5. System continues safely
+1. Multiple booking requests added
+2. Threads process requests concurrently
+3. Queue access synchronized
+4. Inventory updates synchronized
+5. System maintains consistency
 
 ---
 
 ## 🧠 Key Concepts
 
-### ✔ Input Validation
+### ✔ Race Condition
 
-* Ensures correct data before processing
+* Multiple threads modify shared data
 
-### ✔ Custom Exception
+### ✔ Thread Safety
 
-* `InvalidBookingException`
-* Improves clarity of errors
+* Ensures correct behavior under concurrency
 
-### ✔ Fail-Fast Design
+### ✔ Synchronized Blocks
 
-* Stops execution immediately on error
+* Protect critical sections
 
-### ✔ Graceful Handling
+### ✔ Shared Resources
 
-* Errors handled without crashing
-
-### ✔ State Protection
-
-* Prevents invalid updates to system
+* Queue & Inventory
 
 ---
 
-## 🛠️ Classes Used
+## 🛠️ Classes
 
-* `InvalidBookingException` → Custom error
-* `ReservationValidator` → Validation logic
-* `RoomInventory` → Availability check
-* `BookingRequestQueue` → Stores valid requests
-* `UseCase9ErrorHandlingValidation` → Main class
+* `Reservation`
+* `BookingRequestQueue`
+* `RoomInventory`
+* `RoomAllocationService`
+* `ConcurrentBookingProcessor`
+* `UseCase11ConcurrentBookingSimulation`
 
 ---
 
 ## ▶️ How to Run
 
 ```bash
-javac UseCase9ErrorHandlingValidation.java
-java UseCase9ErrorHandlingValidation
+javac UseCase11ConcurrentBookingSimulation.java
+java UseCase11ConcurrentBookingSimulation
 ```
 
 ---
 
-## 💻 Sample Output
+## ✅ Benefits
 
-```
-Booking Validation
-Enter guest name: Abhisheak
-Enter room type: single
-Booking failed: Invalid room type selected.
-```
-
----
-
-## ✅ Key Benefits
-
-* Prevents invalid input
-* Improves system stability
-* Clear error messages
-* Avoids data corruption
+* Prevents double booking
+* Ensures consistent inventory
+* Simulates real-world concurrent users
 
 ---
 
 ## ⚠️ Previous Limitation
 
-Earlier use cases assumed valid input, which could lead to incorrect system states.
-
----
-
-## 🚀 Future Enhancements
-
-* Advanced validation rules
-* Logging system
-* Retry mechanisms
-* UI validation
+Earlier system assumed single-thread execution.
 
 ---
 
 ## 👨‍💻 Author
 
-**Praneet**
+Praneet
