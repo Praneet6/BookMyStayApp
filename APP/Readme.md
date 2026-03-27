@@ -1,91 +1,75 @@
-# 📌 Use Case 7: Add-On Service Selection
+# 📌 Use Case 8: Booking History & Reporting
 
 ## 📖 Overview
 
-This module extends the **Book My Stay App** by introducing optional add-on services that can be attached to an existing reservation. It demonstrates how real-world features like breakfast, spa, and airport pickup can be integrated without modifying core booking or inventory logic.
+This module introduces **historical tracking of confirmed bookings** in the Book My Stay App. It enables administrators to view past reservations and generate reports without modifying the booking system.
 
 ---
 
 ## 🎯 Goal
 
-To enable guests to select additional services for a confirmed reservation while maintaining separation from core booking functionality.
+To store confirmed reservations and generate reports for operational visibility and analysis.
 
 ---
 
 ## 👤 Actors
 
-* **Guest** – selects optional services for a reservation
-* **Add-On Service** – represents individual services (e.g., Breakfast, Spa)
-* **Add-On Service Manager** – manages services linked to reservations
+* **Admin** – views booking history and reports
+* **Booking History** – stores confirmed reservations
+* **Booking Report Service** – generates reports
 
 ---
 
-## 🔄 Flow of Execution
+## 🔄 Flow
 
-1. Guest enters a **Reservation ID**
-2. Guest selects one or more add-on services
-3. Selected services are stored in a list
-4. Services are mapped to the reservation ID
-5. Total cost of services is calculated
-6. Booking and inventory remain unchanged
+1. Booking is confirmed
+2. Reservation is stored in booking history
+3. Data is maintained in order
+4. Admin requests report
+5. Report is generated and displayed
 
 ---
 
-## 🧠 Key Concepts Used
+## 🧠 Key Concepts
 
-### ✔ One-to-Many Relationship
+### ✔ List Data Structure
 
-A single reservation can have multiple services:
+* `List<Reservation>` used to store bookings
+* Maintains insertion order
 
-```
-Reservation ID → [Service1, Service2, Service3]
-```
+### ✔ Ordered Storage
 
-### ✔ Map + List Combination
-
-* `Map<String, List<Service>>`
-* Efficient lookup + multiple service support
-
-### ✔ Composition over Inheritance
-
-* Services are **attached** to reservations
-* No modification of existing booking classes
+* Bookings stored chronologically
 
 ### ✔ Separation of Concerns
 
-* Booking system remains untouched
-* Add-on logic handled independently
+* Storage → `BookingHistory`
+* Reporting → `BookingReportService`
 
-### ✔ Cost Aggregation
+### ✔ Historical Tracking
 
-* Total service cost calculated dynamically
+* Acts as audit trail
 
----
+### ✔ Reporting Readiness
 
-## 🛠️ Implementation Details
-
-### 🔹 Classes Used
-
-* `Service` → Represents an add-on service
-* `AddOnServiceManager` → Handles service mapping and cost calculation
-* `UseCase7AddOnServiceSelection` → Main driver class
+* Enables summaries without modifying data
 
 ---
 
-## 📦 Data Structure Used
+## 🛠️ Classes Used
 
-| Data Structure | Purpose                        |
-| -------------- | ------------------------------ |
-| HashMap        | Map reservation ID to services |
-| ArrayList      | Store multiple services        |
+* `Reservation` → Booking data
+* `BookingHistory` → Stores bookings
+* `BookingReportService` → Generates reports
+* `UseCase8BookingHistoryReport` → Main class
 
 ---
 
 ## ▶️ How to Run
 
 ```bash
-javac UseCase7AddOnServiceSelection.java
-java UseCase7AddOnServiceSelection
+javac UseCase8BookingHistoryReport.java
+java UseCase8BookingHistoryReport
 ```
 
 ---
@@ -93,48 +77,39 @@ java UseCase7AddOnServiceSelection
 ## 💻 Sample Output
 
 ```
-===== Add-On Service Selection =====
-Enter Reservation ID: Single-1
+Booking History and Reporting
 
-1. Add Breakfast (₹500)
-2. Add Spa (₹1000)
-3. Add Airport Pickup (₹800)
-
-Breakfast added to Single-1
-Spa added to Single-1
-
-Total Add-On Cost: 1500.0
+Booking History Report
+Guest: Abhi, Room Type: Single
+Guest: Subha, Room Type: Double
 ```
 
 ---
 
 ## ✅ Key Benefits
 
-* Flexible service attachment
-* Clean extension of booking system
-* No impact on inventory or allocation logic
-* Easy to add new services
+* Maintains booking history
+* Enables reporting and auditing
+* Preserves order of transactions
+* Prepares system for persistence
 
 ---
 
-## ⚠️ Limitations of Previous Use Case
+## ⚠️ Previous Limitation
 
-Use Case 6 confirmed reservations but did not support additional services.
-This use case adds real-world flexibility to enhance booking value.
+Earlier use cases did not store booking history, making it impossible to review past transactions.
 
 ---
 
 ## 🚀 Future Enhancements
 
-* Service removal option
-* Discount/coupon system
-* Service categories (premium/basic)
-* Billing integration
+* Filter reports (by date, room type)
+* Export reports
+* Database integration
+* Analytics dashboard
 
 ---
 
 ## 👨‍💻 Author
 
 **Praneet**
-
----
