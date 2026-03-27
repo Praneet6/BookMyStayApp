@@ -1,75 +1,75 @@
-# 📌 Use Case 8: Booking History & Reporting
+# 📌 Use Case 9: Error Handling & Validation
 
 ## 📖 Overview
 
-This module introduces **historical tracking of confirmed bookings** in the Book My Stay App. It enables administrators to view past reservations and generate reports without modifying the booking system.
+This module introduces structured validation and error handling into the Book My Stay App. It ensures that invalid inputs are detected early and handled gracefully using custom exceptions.
 
 ---
 
 ## 🎯 Goal
 
-To store confirmed reservations and generate reports for operational visibility and analysis.
+To prevent invalid bookings by validating user input and maintaining system consistency.
 
 ---
 
 ## 👤 Actors
 
-* **Admin** – views booking history and reports
-* **Booking History** – stores confirmed reservations
-* **Booking Report Service** – generates reports
+* **Guest** – provides booking input
+* **Reservation Validator** – validates inputs
+* **System** – handles errors safely
 
 ---
 
 ## 🔄 Flow
 
-1. Booking is confirmed
-2. Reservation is stored in booking history
-3. Data is maintained in order
-4. Admin requests report
-5. Report is generated and displayed
+1. User enters booking details
+2. System validates input
+3. If invalid → exception thrown
+4. Error message displayed
+5. System continues safely
 
 ---
 
 ## 🧠 Key Concepts
 
-### ✔ List Data Structure
+### ✔ Input Validation
 
-* `List<Reservation>` used to store bookings
-* Maintains insertion order
+* Ensures correct data before processing
 
-### ✔ Ordered Storage
+### ✔ Custom Exception
 
-* Bookings stored chronologically
+* `InvalidBookingException`
+* Improves clarity of errors
 
-### ✔ Separation of Concerns
+### ✔ Fail-Fast Design
 
-* Storage → `BookingHistory`
-* Reporting → `BookingReportService`
+* Stops execution immediately on error
 
-### ✔ Historical Tracking
+### ✔ Graceful Handling
 
-* Acts as audit trail
+* Errors handled without crashing
 
-### ✔ Reporting Readiness
+### ✔ State Protection
 
-* Enables summaries without modifying data
+* Prevents invalid updates to system
 
 ---
 
 ## 🛠️ Classes Used
 
-* `Reservation` → Booking data
-* `BookingHistory` → Stores bookings
-* `BookingReportService` → Generates reports
-* `UseCase8BookingHistoryReport` → Main class
+* `InvalidBookingException` → Custom error
+* `ReservationValidator` → Validation logic
+* `RoomInventory` → Availability check
+* `BookingRequestQueue` → Stores valid requests
+* `UseCase9ErrorHandlingValidation` → Main class
 
 ---
 
 ## ▶️ How to Run
 
 ```bash
-javac UseCase8BookingHistoryReport.java
-java UseCase8BookingHistoryReport
+javac UseCase9ErrorHandlingValidation.java
+java UseCase9ErrorHandlingValidation
 ```
 
 ---
@@ -77,36 +77,35 @@ java UseCase8BookingHistoryReport
 ## 💻 Sample Output
 
 ```
-Booking History and Reporting
-
-Booking History Report
-Guest: Abhi, Room Type: Single
-Guest: Subha, Room Type: Double
+Booking Validation
+Enter guest name: Abhisheak
+Enter room type: single
+Booking failed: Invalid room type selected.
 ```
 
 ---
 
 ## ✅ Key Benefits
 
-* Maintains booking history
-* Enables reporting and auditing
-* Preserves order of transactions
-* Prepares system for persistence
+* Prevents invalid input
+* Improves system stability
+* Clear error messages
+* Avoids data corruption
 
 ---
 
 ## ⚠️ Previous Limitation
 
-Earlier use cases did not store booking history, making it impossible to review past transactions.
+Earlier use cases assumed valid input, which could lead to incorrect system states.
 
 ---
 
 ## 🚀 Future Enhancements
 
-* Filter reports (by date, room type)
-* Export reports
-* Database integration
-* Analytics dashboard
+* Advanced validation rules
+* Logging system
+* Retry mechanisms
+* UI validation
 
 ---
 
