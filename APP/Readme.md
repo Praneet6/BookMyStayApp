@@ -1,86 +1,90 @@
-# 📌 Use Case 11: Concurrent Booking Simulation
+# 📌 Use Case 12: Data Persistence & System Recovery
 
 ## 📖 Overview
 
-This module demonstrates how multiple users can book rooms simultaneously and how synchronization ensures correctness.
+This module introduces persistence by saving and restoring system state using file storage.
 
 ---
 
 ## 🎯 Goal
 
-To prevent race conditions and ensure thread-safe booking operations.
+To ensure that inventory data survives application restarts.
 
 ---
 
 ## 👤 Actors
 
-* Multiple Guests (threads)
-* Booking Processor
-* Shared Inventory
+* **System** – triggers save/load
+* **Persistence Service** – manages file storage
 
 ---
 
 ## 🔄 Flow
 
-1. Multiple booking requests added
-2. Threads process requests concurrently
-3. Queue access synchronized
-4. Inventory updates synchronized
-5. System maintains consistency
+1. System starts
+2. Inventory loaded from file
+3. Data restored into memory
+4. System runs
+5. Inventory saved before exit
 
 ---
 
 ## 🧠 Key Concepts
 
-### ✔ Race Condition
+### ✔ Persistence
 
-* Multiple threads modify shared data
+* Data stored in file
 
-### ✔ Thread Safety
+### ✔ Serialization (Simple)
 
-* Ensures correct behavior under concurrency
+* Convert objects → text format
 
-### ✔ Synchronized Blocks
+### ✔ Deserialization
 
-* Protect critical sections
+* Read file → restore objects
 
-### ✔ Shared Resources
+### ✔ Failure Handling
 
-* Queue & Inventory
+* Missing file handled safely
 
 ---
 
 ## 🛠️ Classes
 
-* `Reservation`
-* `BookingRequestQueue`
 * `RoomInventory`
-* `RoomAllocationService`
-* `ConcurrentBookingProcessor`
-* `UseCase11ConcurrentBookingSimulation`
+* `FilePersistenceService`
+* `UseCase12DataPersistenceRecovery`
 
 ---
 
 ## ▶️ How to Run
 
 ```bash
-javac UseCase11ConcurrentBookingSimulation.java
-java UseCase11ConcurrentBookingSimulation
+javac UseCase12DataPersistenceRecovery.java
+java UseCase12DataPersistenceRecovery
 ```
 
 ---
 
 ## ✅ Benefits
 
-* Prevents double booking
-* Ensures consistent inventory
-* Simulates real-world concurrent users
+* No data loss
+* Persistent system state
+* Prepares for database usage
 
 ---
 
 ## ⚠️ Previous Limitation
 
-Earlier system assumed single-thread execution.
+Earlier system lost all data after restart.
+
+---
+
+## 🚀 Future Enhancements
+
+* Database integration
+* JSON/XML storage
+* Backup recovery
 
 ---
 
