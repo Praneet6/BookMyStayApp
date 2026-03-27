@@ -1,81 +1,115 @@
-## 🧩 Use Case 6: Reservation Confirmation & Room Allocation
+# 📌 Use Case 8: Booking History & Reporting
 
-### 🎯 Goal
+## 📖 Overview
 
-Confirm booking requests by assigning rooms safely while ensuring inventory consistency and preventing double-booking under all circumstances.
-
----
-
-### 👥 Actors
-
-* **Booking Service** – Processes queued booking requests and performs room allocation
-* **Inventory Service** – Maintains and updates room availability state
+This module introduces **historical tracking of confirmed bookings** in the Book My Stay App. It enables administrators to view past reservations and generate reports without modifying the booking system.
 
 ---
 
-### 🔄 Flow
+## 🎯 Goal
 
-1. Booking request is dequeued from the request queue (FIFO)
-2. The system checks availability for the requested room type
-3. A unique room ID is generated and assigned
-4. The room ID is recorded to prevent reuse
-5. Inventory count is decremented immediately
-6. Reservation is confirmed
+To store confirmed reservations and generate reports for operational visibility and analysis.
 
 ---
 
-### 🧠 Key Concepts Used
+## 👤 Actors
 
-* **Problem of Double Booking**
-  Without controlled allocation, the same room may be assigned multiple times, leading to inconsistent system state.
-
-* **Set Data Structure**
-  A `Set<String>` is used to store allocated room IDs and ensure uniqueness.
-
-* **Uniqueness Enforcement**
-  Duplicate room IDs are prevented automatically using a set.
-
-* **Mapping Room Types to Assigned Rooms**
-  A `HashMap<String, Set<String>>` tracks allocated rooms per room type.
-
-* **Atomic Logical Operations**
-  Room assignment and inventory update are performed together to maintain consistency.
-
-* **Inventory Synchronization**
-  Availability is updated immediately after allocation to reflect real-time state.
+* **Admin** – views booking history and reports
+* **Booking History** – stores confirmed reservations
+* **Booking Report Service** – generates reports
 
 ---
 
-### 📌 Key Requirements
+## 🔄 Flow
 
-* Process booking requests in FIFO order
-* Generate a unique room ID for each booking
-* Prevent duplicate room assignments
-* Update inventory immediately after allocation
-* Maintain consistent system state
-
----
-
-### ✅ Key Benefits
-
-* Guarantees unique room assignments
-* Prevents double-booking scenarios
-* Keeps inventory and booking data synchronized
+1. Booking is confirmed
+2. Reservation is stored in booking history
+3. Data is maintained in order
+4. Admin requests report
+5. Report is generated and displayed
 
 ---
 
-### ⚠️ Drawbacks of Previous Use Case
+## 🧠 Key Concepts
 
-* Use Case 5 handled request ordering but did not confirm bookings
-* No mechanism existed to prevent duplicate or conflicting room assignments
+### ✔ List Data Structure
+
+* `List<Reservation>` used to store bookings
+* Maintains insertion order
+
+### ✔ Ordered Storage
+
+* Bookings stored chronologically
+
+### ✔ Separation of Concerns
+
+* Storage → `BookingHistory`
+* Reporting → `BookingReportService`
+
+### ✔ Historical Tracking
+
+* Acts as audit trail
+
+### ✔ Reporting Readiness
+
+* Enables summaries without modifying data
 
 ---
 
-### 🖥️ Sample Output
+## 🛠️ Classes Used
 
-```text id="u7v4r9"
-Room Allocation Processing
-Booking confirmed for Guest: Abhi, Room ID: Single Room-1
-Booking confirmed for Guest: Subha, Room ID: Single Room-2
-Booking confirmed for Guest: Vanmathi, Room ID: Suite Room-1
+* `Reservation` → Booking data
+* `BookingHistory` → Stores bookings
+* `BookingReportService` → Generates reports
+* `UseCase8BookingHistoryReport` → Main class
+
+---
+
+## ▶️ How to Run
+
+```bash
+javac UseCase8BookingHistoryReport.java
+java UseCase8BookingHistoryReport
 ```
+
+---
+
+## 💻 Sample Output
+
+```
+Booking History and Reporting
+
+Booking History Report
+Guest: Abhi, Room Type: Single
+Guest: Subha, Room Type: Double
+```
+
+---
+
+## ✅ Key Benefits
+
+* Maintains booking history
+* Enables reporting and auditing
+* Preserves order of transactions
+* Prepares system for persistence
+
+---
+
+## ⚠️ Previous Limitation
+
+Earlier use cases did not store booking history, making it impossible to review past transactions.
+
+---
+
+## 🚀 Future Enhancements
+
+* Filter reports (by date, room type)
+* Export reports
+* Database integration
+* Analytics dashboard
+
+---
+
+## 👨‍💻 Author
+
+**Praneet**
