@@ -1,1 +1,1 @@
-# 📌 Use Case 9: Error Handling & Validation
+# 📌 Use Case 10: Error Handling & Validation
